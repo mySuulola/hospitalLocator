@@ -1,21 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
-import { Layout, Menu, Input, TreeSelect } from 'antd';
-import { AudioOutlined, UserOutlined } from '@ant-design/icons';
+import { Layout, Menu, Input, TreeSelect, Spin, Alert } from 'antd';
+import { UserOutlined } from '@ant-design/icons';
 
 
 const { Header, Content, Footer, Sider } = Layout;
 const { Search } = Input;
 const { TreeNode } = TreeSelect;
-
-const suffix = (
-  <AudioOutlined
-    style={{
-      fontSize: 16,
-      color: '#1890ff',
-    }}
-  />
-);
 
 
 
@@ -26,19 +17,30 @@ const searchForHost = (searchLocation: string) => {
 const App: React.FC = () => {
   const [searchInput, setSearchInput] = useState<string>('');
   const [searchRadius, setSearchRadius] = useState<string>('1-2km');
+  const [hospitalList, setHospitalList] = useState<any[]>([]);
 
   const handleGeoLocationSelection = (value: string) => {
     setSearchRadius(value)
   }
 
-  const handleSearchInputChange = (value: any) => {
-    console.log(value)
-    setSearchInput(value)
+  const handleSearchInputChange = (e: any) => {
+    console.log(e.target.value)
+    setSearchInput(e.target.value)
+    // make call to the googleapi here to update the setHospitalList array
+
   }
+
+
+  // // componentDidMount()
+  // useEffect(() => {
+  //   console.log('mounted')
+  //   // make call to 
+  //   setHospitalList([1,2,3,4])
+  // }, []);
 
   return (
     <Layout className="app">
-      <Sider
+      {/* <Sider
         breakpoint="lg"
         collapsedWidth="0"
         onBreakpoint={(broken: any) => {
@@ -56,48 +58,65 @@ const App: React.FC = () => {
           <Menu.Item key="2" icon={<UserOutlined />}>
             Home
           </Menu.Item>
-          {/* <Menu.Item key="3" icon={<UploadOutlined />}>
-            nav 3
-          </Menu.Item> */}
         </Menu>
       </Sider>
+       */}
       <Layout>
         <Header className="site-layout-sub-header-background">
           <h1 className="title">Hospital Finder</h1>
         </Header>
         <Content style={{ margin: '24px 16px 0' }}>
-          <div className="site-layout-background" style={{ padding: 24, minHeight: 450, display: 'flex', justifyContent: 'space-around',  }}>
-           <div  style={{ width: '20%' }} >
-             <h6>Geolocation Radius</h6>
-           <TreeSelect
-              showSearch
-              style={{ width: '100%' }}
-              value={searchRadius}
-              dropdownStyle={{ maxHeight: 400, overflow: 'hidden' }}
-              placeholder="Please select"
-              allowClear
-              treeDefaultExpandAll
-              onChange={handleGeoLocationSelection}
-            >
-              <TreeNode value="1km" title="less than 1 km">
-                <TreeNode value="0m - 500m" title="0m - 500m" />
-                <TreeNode value="500m - 1000m" title="500m - 1000m" />
-              </TreeNode>
-              <TreeNode value="1-5km" title="1-5km">
-                <TreeNode value="1-3km" title="1-3km" />
-                <TreeNode value="3-5km" title="3-5km" />
-              </TreeNode>
-            </TreeSelect>
-           
-           </div>
-            <Search
-              style={{ width: '75%', marginTop: 15 }}
-              placeholder="input search text"
-              enterButton="Search"
-              size="large"
-              suffix={suffix}
-              onSearch={(value: string) => searchForHost(value)}
-            />
+          <div className="site-layout-background" style={{ padding: 24, minHeight: 450 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-around', }}>
+              <div style={{ width: '20%' }} >
+                <h6>Geolocation Radius</h6>
+                <TreeSelect
+                  showSearch
+                  style={{ width: '100%' }}
+                  value={searchRadius}
+                  dropdownStyle={{ maxHeight: 400, overflow: 'hidden' }}
+                  placeholder="Please select"
+                  allowClear
+                  treeDefaultExpandAll
+                  onChange={handleGeoLocationSelection}
+                >
+                  <TreeNode value="1km" title="less than 1 km">
+                    <TreeNode value="0m - 500m" title="0m - 500m" />
+                    <TreeNode value="500m - 1000m" title="500m - 1000m" />
+                  </TreeNode>
+                  <TreeNode value="1-5km" title="1-5km">
+                    <TreeNode value="1-3km" title="1-3km" />
+                    <TreeNode value="3-5km" title="3-5km" />
+                  </TreeNode>
+                  <TreeNode value="5km and above" title="5km and above">
+                    <TreeNode value="5-10km" title="5-10km" />
+                    <TreeNode value="above 10km" title="above 10km" />
+                  </TreeNode>
+                </TreeSelect>
+
+              </div>
+              <Search
+                style={{ width: '75%', marginTop: 15 }}
+                placeholder="Input locality"
+                // enterButton="Search"
+                // size="large"
+                // suffix={suffix}
+                onChange={handleSearchInputChange}
+              />
+            </div>
+            <div style={{padding: 10}}>
+              {(hospitalList.length === 0 && searchInput !== "") && <Spin tip="Loading...">
+                <Alert
+                  message="Hospital Loading..."
+                  description={`List of hospitals at ${searchInput} within ${searchRadius}`}
+                  type="info"
+                />
+              </Spin>}
+            </div>
+
+
+          </div>
+          <div className="row">
 
           </div>
         </Content>
