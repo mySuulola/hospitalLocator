@@ -112,6 +112,16 @@ const App: React.FC = () => {
                   type="info"
                 />
               </Spin>}
+
+              {(hospitalList.length > 0) &&  <div>
+                <h1>Hospital List</h1>
+                hospitalList.forEach(hospital => 
+                  (
+                  <p>hjk</p>
+                  )                  
+                );
+              </div>  }
+
             </div>
 
 
