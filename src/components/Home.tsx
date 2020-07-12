@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { Link } from "react-router-dom";
 import { Layout, Input, Spin, Alert, List, Avatar } from 'antd';
 const { Header, Content, Footer } = Layout;
 const { Search } = Input;
@@ -58,10 +57,6 @@ const Home: React.FC = () => {
                     </div>
                   }
                   renderItem={item => (
-                    <Link to={{
-                      pathname: `/movie/${item.id}`,
-                      state: item
-                    }} >
                       <List.Item
                         key={item.id}
                         extra={
@@ -80,11 +75,6 @@ const Home: React.FC = () => {
                         />
                         {item.content}
                       </List.Item>
-
-
-                    </Link>
-
-
                   )}
                 />
               </div>}
